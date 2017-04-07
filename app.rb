@@ -31,6 +31,13 @@ get '/search/band_name/:name' do
   result_array.to_json
 end
 
+get '/band_by_name_and_id/:name/:id' do
+  name = params['name']
+  id = params['id']
+  url =  "http://www.metal-archives.com/bands/" + name + "/" + id
+  Band.show_band_page(Parse.get_url(url)).to_json
+end
+
 get '/band/:name' do
   html = Parse.get_json(Url.BAND(params['name']))
   direct_link = Nokogiri::HTML(html["aaData"][0][0]).css('a')
