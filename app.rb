@@ -11,6 +11,26 @@ get '/' do
   'Hello World!'
 end
 
+get '/search/band_name/:name' do
+  html = Parse.get_json(Url.BAND(params['name']))
+  search_results = html["aaData"]
+
+  result_array = []
+
+  search_results.each do |result|
+      band = {}
+
+      url = Nokogiri::HTML(result[0]).css('a')
+      band["name"] = url.text
+      band["url"] = url.xpath('//a/@href')
+      band["genere"] = result[1]
+      band["country"] = result[2]
+      result_array.push(band)
+  end
+
+  result_array.to_json
+end
+
 get '/band/:name' do
   html = Parse.get_json(Url.BAND(params['name']))
   direct_link = Nokogiri::HTML(html["aaData"][0][0]).css('a')
