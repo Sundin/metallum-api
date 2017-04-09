@@ -47,13 +47,19 @@ get '/band/:name' do
   }
 end
 
-get '/album/:name' do
-  html = Parse.get_json(Url.ALBUM(params['name']))
-  direct_link = Nokogiri::HTML(html["aaData"][0][1]).css('a')
-  direct_link.map{ |link|
-    res = Album.show_album_page(Parse.get_url(link['href']))
-    res.to_json
-  }
+get '/album/:band/:name/:id' do
+  band = params['band']
+  name = params['name']
+  id = params['id']
+  url =  "http://www.metal-archives.com/albums/" + band + "/" + name + "/" + id
+  Album.show_album_page(Parse.get_url(url)).to_json
+
+  # html = Parse.get_json(Url.ALBUM(params['name']))
+  # direct_link = Nokogiri::HTML(html["aaData"][0][1]).css('a')
+  # direct_link.map{ |link|
+  #   res = Album.show_album_page(Parse.get_url(link['href']))
+  #   res.to_json
+  # }
 end
 
 get '/:number' do
