@@ -22,9 +22,12 @@ get '/search/band_name/:name' do
 
       url = Nokogiri::HTML(result[0]).css('a')
       band["name"] = url.text
-      band["url"] = url.xpath('//a/@href')
-      band["id"] = band["url"].substr(id.lastIndexOf('/') + 1);
-      band["genere"] = result[1]
+
+      band["url"] = url[0]['href']
+      splitted_url = band["url"].split('/')
+      band["id"] = splitted_url[splitted_url.length-1]
+
+      band["genre"] = result[1]
       band["country"] = result[2]
       result_array.push(band)
   end
