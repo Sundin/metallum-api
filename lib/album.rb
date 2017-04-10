@@ -3,7 +3,7 @@ class Album
   def self.show_album_page(html)
     page = Nokogiri::HTML(html)
     album_values = {}
-    album_keys = {0 => "type", 1 => "release", 2 => "catalog_id", 3 => "label", 4 => "format", 5 => "reviews"}
+    album_keys = {0 => "type", 1 => "release", 2 => "catalog_id", 3 => "label", 4 => "format", 5 => "limitation", 6 => "reviews"}
     page.css('div#album_info dd').each_with_index do |item, index|
       album_values[album_keys[index]] = item.content.strip.split.join " "
     end

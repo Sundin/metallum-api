@@ -27,7 +27,12 @@ get '/album/:band/:title/:id' do
   band = params['band']
   title = params['title']
   id = params['id']
-  Scraper.getAlbum(band, title, id)
+  album = Scraper.getAlbum(band, title, id)
+
+  collection = client[:albums]
+  collection.update_one(album, {})
+
+  album.to_json
 end
 
 get '/search/band_name/:name' do
