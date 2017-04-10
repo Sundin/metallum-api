@@ -38,6 +38,12 @@ class Band
     band_values['photo_url'] = page.css("a[id=photo]")[0]['href']
     band_values['logo_url'] = page.css("a[id=logo]")[0]['href']
 
+    band_values['band_name'] = page.css("h1[class=band_name]")[0].text
+
+    url = page.css("h1[class=band_name] a")[0]['href']
+    splitted_url = url.split('/')
+    band_values['id'] = splitted_url[splitted_url.length-1]
+
     band_values
   end
 
@@ -50,7 +56,7 @@ class Band
       disc = {}
       album.css('td').map.with_index do |item, index|        
         disc[discog_keys[index]] = item.content.strip.split.join " "
-        disc["link"] = album.xpath('//a/@href')[album_numer] 
+        disc['url'] = album.xpath('//a/@href')[album_numer] 
       end
       discography.push disc
       album_numer = album_numer + 1
