@@ -8,7 +8,7 @@ require_relative 'url'
 class Scraper 
     def self.getBand(name, id)
         url = "http://www.metal-archives.com/bands/" + name + "/" + id
-        Band.show_band_page(Parse.get_url(url)).to_json
+        Band.show_band_page(Parse.get_url(url))
     end
 
     def self.getAlbum(band, title, id)

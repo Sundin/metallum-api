@@ -35,16 +35,36 @@ class Band
       end
     end
 
-    band_values['photo_url'] = page.css("a[id=photo]")[0]['href']
-    band_values['logo_url'] = page.css("a[id=logo]")[0]['href']
+    photo_url = page.css("a[id=photo]")[0]['href']
+    logo_url = page.css("a[id=logo]")[0]['href']
 
-    band_values['band_name'] = page.css("h1[class=band_name]")[0].text
+    band_name = page.css("h1[class=band_name]")[0].text
 
     url = page.css("h1[class=band_name] a")[0]['href']
     splitted_url = url.split('/')
-    band_values['id'] = splitted_url[splitted_url.length-1]
+    id = splitted_url[splitted_url.length-1]
 
-    band_values
+    band = {
+      band_name: band_name,
+      _id: id,
+      country: band_values["country"],
+      location: band_values["location"],
+      status: band_values["status"],
+      active_since: band_values["active_since"],
+      genre: band_values["genre"],
+      themes: band_values["themes"],
+      label: band_values["label"],
+      years_active: band_values["years_active"],
+      url: url,
+      photo_url: photo_url,
+      logo_url: logo_url,
+      members: members,
+      discography: band_values["discography"],
+      links: band_values["links"],
+      similar: band_values["similar"]
+    }
+
+    band
   end
 
   def self.show_band_discography(url)
@@ -56,8 +76,11 @@ class Band
       disc = {}
       album.css('td').map.with_index do |item, index|        
         disc[discog_keys[index]] = item.content.strip.split.join " "
-        disc['url'] = album.xpath('//a/@href')[album_numer] 
       end
+      url = album.css('a')[0]['href']
+      splitted_url = url.split('/')
+      disc['url'] = url
+      disc['_id'] = splitted_url[splitted_url.length-1]
       discography.push disc
       album_numer = album_numer + 1
     end

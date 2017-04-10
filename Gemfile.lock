@@ -2,8 +2,11 @@ GEM
   remote: https://rubygems.org/
   specs:
     backports (3.6.8)
+    bson (4.2.1)
     diff-lcs (1.2.5)
     mini_portile2 (2.0.0)
+    mongo (2.4.1)
+      bson (>= 4.2.1, < 5.0.0)
     multi_json (1.12.0)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
@@ -44,6 +47,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  mongo (~> 2.4)
   nokogiri
   rack-test
   rspec
@@ -51,4 +55,4 @@ DEPENDENCIES
   sinatra-reloader
 
 BUNDLED WITH
-   1.12.3
+   1.14.4
