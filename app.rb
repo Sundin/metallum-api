@@ -18,7 +18,16 @@ get '/band/:name/:id' do
   band = Scraper.getBand(name, id)
 
   collection = client[:bands]
-  collection.update_one(band, {})
+  collection.delete_one( { _id: id } )
+  collection.insert_one(band, {}) 
+
+  band.to_json
+end
+
+get '/band/:id' do
+  id = params['id']
+  collection = client[:bands]
+  band = collection.find( { _id: id} ).first
 
   band.to_json
 end
@@ -31,6 +40,14 @@ get '/album/:band/:title/:id' do
 
   collection = client[:albums]
   collection.update_one(album, {})
+
+  album.to_json
+end
+
+get '/album/:id' do
+  id = params['id']
+  collection = client[:albums]
+  album = collection.find( { _id: id} ).first
 
   album.to_json
 end
