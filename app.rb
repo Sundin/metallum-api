@@ -22,8 +22,8 @@ get '/band/:name/:id' do
   band = Scraper.getBand(name, id)
 
   collection = client[:bands]
-  collection.delete_one( { _id: id } )
-  collection.insert_one(band, {}) 
+  # collection.delete_one( { _id: id } )
+  # collection.insert_one(band, {}) 
 
   band.to_json
 end

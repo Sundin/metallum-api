@@ -12,8 +12,11 @@ class Crawler
         bands = browse_helper(letter, 0)
         bands.each do |band|
             band_data = Band.show_band_page(Parse.get_url(band['url']))
-            collection.delete_one( { _id: band_data['_id'] } )
-            collection.insert_one(band_data, {}) 
+
+            unless band_data[:_id].nil? 
+                collection.delete_one( { _id: band_data[:_id] } )
+                collection.insert_one(band_data, {})
+            end
         end
     end
     
