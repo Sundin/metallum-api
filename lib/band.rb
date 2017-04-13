@@ -35,8 +35,8 @@ class Band
       end
     end
 
-    photo_url = page.css("a[id=photo]")[0]['href']
-    logo_url = page.css("a[id=logo]")[0]['href']
+    photo_url = page.css('a[id=photo]').first.attr('href') unless page.css('a[id=photo]').empty?
+    logo_url = page.css('a[id=logo]').first.attr('href') unless page.css('a[id=logo]').empty?
 
     band_name = page.css("h1[class=band_name]")[0].text
 
