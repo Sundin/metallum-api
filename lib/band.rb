@@ -119,7 +119,7 @@ class Band
     res = Nokogiri::HTML Parse.get_url url
     links, link = [], {}
     res.css("table tr td a").each_with_index do |item, i|
-      link[item['title'].gsub("Go to: ", "")] = item['href']
+      link[item['title'].gsub("Go to: ", "").tr("§", "").tr(".", " ")] = item['href']
       links.push link
       link = {}
     end
