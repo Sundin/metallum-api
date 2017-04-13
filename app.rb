@@ -10,7 +10,8 @@ client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
 db = client.database
 
 get '/' do
-  Crawler.browse('a')
+  # a - z, NBR, ~ 
+  Crawler.browse_bands('a')
 end
 
 get '/band/:name/:id' do

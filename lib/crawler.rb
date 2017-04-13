@@ -2,7 +2,7 @@ require 'json'
 require_relative 'scraper'
 
 class Crawler 
-    def self.browse(letter)
+    def self.browse_bands(letter)
         browse_helper(letter, 0)
     end
     
@@ -20,13 +20,17 @@ class Crawler
 
         json = Parse.get_json(url)
         total_records = json['iTotalRecords']
+        last_band = display_start + display_length
+        puts "Fetching bands " + display_start.to_s + "-" + last_band.to_s + " out of " + total_records.to_s + " for letter " + letter
+
         if display_start + display_length < total_records
             list1 = JSON.parse(parse_band_list(json['aaData'])) 
-            list2 = JSON.parse(browse_helper(letter, display_start + display_length))
+            list2 = JSON.parse(browse_helper(letter, last_band))
             
             list1.each do |b|
                 list2 << b
             end
+
             list2.to_json
         else 
             parse_band_list(json['aaData'])
