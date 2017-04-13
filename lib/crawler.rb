@@ -1,9 +1,20 @@
 require 'json'
+require 'mongo'
 require_relative 'scraper'
+require_relative 'band'
 
 class Crawler 
     def self.browse_bands(letter)
-        browse_helper(letter, 0)
+        client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
+        db = client.database
+        collection = client[:bandz]
+
+        bands = browse_helper(letter, 0)
+        bands.each do |band|
+            band_data = Band.show_band_page(Parse.get_url(band['url']))
+            collection.delete_one( { _id: band_data['_id'] } )
+            collection.insert_one(band_data, {}) 
+        end
     end
     
     def self.browse_helper(letter, display_start)
@@ -24,14 +35,14 @@ class Crawler
         puts "Fetching bands " + display_start.to_s + "-" + last_band.to_s + " out of " + total_records.to_s + " for letter " + letter
 
         if display_start + display_length < total_records
-            list1 = JSON.parse(parse_band_list(json['aaData'])) 
-            list2 = JSON.parse(browse_helper(letter, last_band))
+            list1 = parse_band_list(json['aaData'])
+            list2 = browse_helper(letter, last_band)
             
             list1.each do |b|
                 list2 << b
             end
 
-            list2.to_json
+            list2
         else 
             parse_band_list(json['aaData'])
         end
@@ -48,14 +59,14 @@ class Crawler
 
             band["url"] = url[0]['href']
             splitted_url = band["url"].split('/')
-            band["id"] = splitted_url[splitted_url.length-1]
+            band["_id"] = splitted_url[splitted_url.length-1]
 
             # band["country"] = result[1]
             # band["genre"] = result[2]
             result_array.push(band)
         end
 
-        result_array.to_json
+        result_array
     end
 end
 

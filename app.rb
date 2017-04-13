@@ -5,13 +5,15 @@ require 'mongo'
 require_relative 'lib/scraper'
 require_relative 'lib/crawler'
 
-
 client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
 db = client.database
 
-get '/' do
+get '/:letter' do
   # a - z, NBR, ~ 
-  Crawler.browse_bands('a')
+  letter = params['letter']
+  bands = Crawler.browse_bands(letter)
+  puts bands.count
+  bands.to_json
 end
 
 get '/band/:name/:id' do
@@ -28,7 +30,7 @@ end
 
 get '/band/:id' do
   id = params['id']
-  collection = client[:bands]
+  collection = client[:bandz]
   band = collection.find( { _id: id} ).first
 
   band.to_json
