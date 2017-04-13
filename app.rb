@@ -3,13 +3,14 @@ require 'sinatra/reloader'
 require 'json'
 require 'mongo'
 require_relative 'lib/scraper'
+require_relative 'lib/crawler'
 
 
 client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
 db = client.database
 
 get '/' do
-  puts db.collection_names
+  Crawler.browse('a')
 end
 
 get '/band/:name/:id' do
