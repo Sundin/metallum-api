@@ -77,7 +77,7 @@ class Band
       album.css('td').map.with_index do |item, index|        
         disc[discog_keys[index]] = item.content.strip.split.join " "
       end
-      url = album.css('a')[0]['href']
+      url = album.css('a').first.attr('href') unless album.css('a').empty?
       splitted_url = url.split('/')
       disc['url'] = url
       disc['_id'] = splitted_url[splitted_url.length-1]

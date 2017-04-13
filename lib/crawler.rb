@@ -71,6 +71,19 @@ class Crawler
 
         result_array
     end
+
+    def self.add_album(url) 
+        client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
+        db = client.database
+        collection = client[:albums]
+        
+        album_data = Album.show_album_page(Parse.get_url(url))
+
+        unless album_data[:_id].nil? 
+            collection.delete_one( { _id: album_data[:_id] } )
+            collection.insert_one(album_data, {})
+        end        
+    end
 end
 
 
