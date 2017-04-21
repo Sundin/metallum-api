@@ -25,8 +25,10 @@ class Crawler
 
             band_data[:discography].each do |album|
                 album_data = Album.show_album_page(Parse.get_url(album['url']))
-                @album_collection.delete_one( { _id: album_data[:_id] } )
-                @album_collection.insert_one(album_data, {})
+                unless album_data[:_id].nil? 
+                    @album_collection.delete_one( { _id: album_data[:_id] } )
+                    @album_collection.insert_one(album_data, {})
+                end
             end
         end
     end

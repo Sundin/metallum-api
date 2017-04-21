@@ -42,7 +42,7 @@ class Band
 
     url = page.css("h1[class=band_name] a")[0]['href']
     splitted_url = url.split('/')
-    id = splitted_url[splitted_url.length-1]
+    id = splitted_url[splitted_url.length-1].to_i
 
     band = {
       band_name: band_name,

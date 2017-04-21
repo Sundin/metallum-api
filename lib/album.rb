@@ -3,14 +3,18 @@ class Album
   def self.show_album_page(html)
     page = Nokogiri::HTML(html)
 
+    url = page.css("h1[class=album_name] a")[0]['href'] unless page.css("h1[class=album_name] a").empty?
+    if url == nil 
+      return {}
+    end
+
+    splitted_url = url.split('/')
+    id = splitted_url[splitted_url.length-1].to_i
+
     album_values = {}
     page.css('div#album_info').search('dt').each do |node|
       album_values[node.text] = node.next_element.text
     end
-
-    url = page.css("h1[class=album_name] a")[0]['href']
-    splitted_url = url.split('/')
-    id = splitted_url[splitted_url.length-1]
 
     songs = []
     page.css('table.table_lyrics').search('td.wrapWords').each do |element|
