@@ -19,18 +19,18 @@ end
 get '/band/:name/:id' do
   name = params['name']
   id = params['id']
-  band = Scraper.getBand(name, id)
+  # band = Scraper.getBand(name, id)
 
-  collection = client[:bands]
-  # collection.delete_one( { _id: id } )
-  # collection.insert_one(band, {}) 
+  url = "http://www.metal-archives.com/bands/" + name + "/" + id
+  band_data = Band.show_band_page(Parse.get_url(url))
+  band = Crawler.save_band(band_data)
 
   band.to_json
 end
 
 get '/band/:id' do
   id = params['id']
-  collection = client[:bandz]
+  collection = client[:bands]
   band = collection.find( { _id: id} ).first
 
   band.to_json

@@ -2,20 +2,31 @@ require 'json'
 require 'mongo'
 require_relative 'scraper'
 require_relative 'band'
+require_relative 'album'
 
 class Crawler 
-    def self.browse_bands(letter)
-        client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
-        db = client.database
-        collection = client[:bandz]
+    @client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
+    @db = @client.database
+    @band_collection = @client[:bands]
+    @album_collection = @client[:albums]
 
+    def self.browse_bands(letter)
         bands = browse_helper(letter, 0)
         bands.each do |band|
             band_data = Band.show_band_page(Parse.get_url(band['url']))
+            save_band(band_data)
+        end
+    end
 
-            unless band_data[:_id].nil? 
-                collection.delete_one( { _id: band_data[:_id] } )
-                collection.insert_one(band_data, {})
+    def self.save_band(band_data)
+        unless band_data[:_id].nil? 
+            @band_collection.delete_one( { _id: band_data[:_id] } )
+            @band_collection.insert_one(band_data, {})
+
+            band_data[:discography].each do |album|
+                album_data = Album.show_album_page(Parse.get_url(album['url']))
+                @album_collection.delete_one( { _id: album_data[:_id] } )
+                @album_collection.insert_one(album_data, {})
             end
         end
     end

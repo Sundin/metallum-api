@@ -3,30 +3,39 @@ class Album
   def self.show_album_page(html)
     page = Nokogiri::HTML(html)
 
-    puts page
-
     album_values = {}
-    album_keys = {0 => "type", 1 => "release", 2 => "catalog_id", 3 => "label", 4 => "format", 5 => "limitation", 6 => "reviews"}
-    page.css('div#album_info dd').each_with_index do |item, index|
-      album_values[album_keys[index]] = item.content.strip.split.join " "
+    page.css('div#album_info').search('dt').each do |node|
+      album_values[node.text] = node.next_element.text
     end
-    album_values['reviews'] = show_album_reviews page.css('table#review_list')
-    album_values
 
     url = page.css("h1[class=album_name] a")[0]['href']
     splitted_url = url.split('/')
     id = splitted_url[splitted_url.length-1]
 
+    songs = []
+    page.css('table.table_lyrics').search('td.wrapWords').each do |element|
+      title = element.text.strip || element.text
+      song = {
+        title: title.tr("\n", "").tr("\t", "")
+      }
+      songs.push song
+    end
+
+    cover_url = page.css("a.image#cover")[0]['href'] unless page.css("a.image#cover").empty?
+
     album = {
       _id: id,
-      type: album_values['type'],
-      release: album_values['release'],
-      catalog_id: album_values['catalog_id'],
-      label: album_values['label'],
-      format: album_values['format'],
-      limitation: album_values['limitation'],
-      reviews: album_values['reviews']
+      type: album_values['Type:'],
+      release_date: album_values['Release date:'],
+      catalog_id: album_values['Catalog ID:'],
+      label: album_values['Label:'],
+      format: album_values['Format:'],
+      limitation: album_values['Limitation:'],
+      songs: songs,
+      cover_url: cover_url,
+      year: album_values['Release date:'][-4..-1].to_i || nil
     }
+    # TODO: lineup, reviews, song lengths
 
     album
   end
