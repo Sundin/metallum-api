@@ -42,7 +42,7 @@ class Band
 
     url = page.css("h1[class=band_name] a")[0]['href']
     splitted_url = url.split('/')
-    id = splitted_url[splitted_url.length-1].to_i
+    id = splitted_url[splitted_url.length-1]
 
     band = {
       band_name: band_name,
@@ -96,7 +96,7 @@ class Band
       if (i+2)%2 == 0
         url = item.css('a').first.attr('href') unless item.css('a').empty?
         splitted_url = url.split('/')
-        member['_id'] = splitted_url[splitted_url.length-1].to_i
+        member['_id'] = splitted_url[splitted_url.length-1]
         member['url'] = url
       elsif (i+2)%2 == 1
         members.push member
@@ -115,7 +115,7 @@ class Band
       if (i+4)%4 == 0
         url = item.css('a').first.attr('href') unless item.css('a').empty?
         splitted_url = url.split('/')
-        band['_id'] = splitted_url[splitted_url.length-1].to_i
+        band['_id'] = splitted_url[splitted_url.length-1]
       elsif (i+4)%4 == 3
         bands.push band
         band = {}

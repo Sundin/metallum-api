@@ -37,7 +37,7 @@ get '/band/:name/:id' do
 end
 
 get '/band/:id' do
-  id = params['id'].to_i
+  id = params['id']
   collection = client[:bands]
   band = collection.find( { _id: id} ).first
 
@@ -57,7 +57,7 @@ get '/album/:band/:title/:id' do
 end
 
 get '/album/:id' do
-  id = params['id'].to_i
+  id = params['id']
   collection = client[:albums]
   album = collection.find( { _id: id} ).first
 

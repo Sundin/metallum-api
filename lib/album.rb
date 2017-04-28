@@ -9,7 +9,7 @@ class Album
     end
 
     splitted_url = url.split('/')
-    id = splitted_url[splitted_url.length-1].to_i
+    id = splitted_url[splitted_url.length-1]
 
     title = page.css("h1[class=album_name] a")[0].text
 
