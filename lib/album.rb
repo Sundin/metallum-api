@@ -29,6 +29,7 @@ class Album
 
     album = {
       _id: id,
+      title: "TODO",
       type: album_values['Type:'],
       release_date: album_values['Release date:'],
       catalog_id: album_values['Catalog ID:'],
