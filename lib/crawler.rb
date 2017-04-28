@@ -13,8 +13,12 @@ class Crawler
     def self.browse_bands(letter)
         bands = browse_helper(letter, 0)
         bands.each do |band|
-            band_data = Band.show_band_page(Parse.get_url(band['url']))
-            save_band(band_data)
+            t = Thread.new {
+                band_data = Band.show_band_page(Parse.get_url(band['url']))
+                save_band(band_data)
+                sleep 500
+            }
+            t.abort_on_exception = false
         end
     end
 
@@ -25,11 +29,15 @@ class Crawler
 
             band_data[:discography].each do |album|
                 album_data = Album.show_album_page(Parse.get_url(album['url']))
-                unless album_data[:_id].nil? 
-                    @album_collection.delete_one( { _id: album_data[:_id] } )
-                    @album_collection.insert_one(album_data, {})
-                end
+                save_album(album_data)
             end
+        end
+    end
+
+    def self.save_album(album_data) 
+        unless album_data[:_id].nil? 
+            @album_collection.delete_one( { _id: album_data[:_id] } )
+            @album_collection.insert_one(album_data, {})
         end
     end
     
