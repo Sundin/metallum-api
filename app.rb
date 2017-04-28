@@ -8,6 +8,12 @@ require_relative 'lib/crawler'
 client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
 db = client.database
 
+
+##### On startup: ######
+# bands = Crawler.browse_bands('r')
+########################
+
+
 get '/:letter' do
   # a - z, NBR, ~ 
   letter = params['letter']
