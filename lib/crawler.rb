@@ -9,6 +9,7 @@ class Crawler
     @db = @client.database
     @band_collection = @client[:bands]
     @album_collection = @client[:albums]
+    @member_collection = @client[:members]
 
     def self.browse_bands(letter)
         bands = browse_helper(letter, 0)
@@ -50,6 +51,13 @@ class Crawler
         unless album_data[:_id].nil? 
             @album_collection.delete_one( { _id: album_data[:_id] } )
             @album_collection.insert_one(album_data, {})
+        end
+    end
+
+    def self.save_member(member_data) 
+        unless member_data[:_id].nil? 
+            @member_collection.delete_one( { _id: member_data[:_id] } )
+            @member_collection.insert_one(member_data, {})
         end
     end
     

@@ -103,18 +103,40 @@ class Band
     members = []
     member = {}
     member_keys = {0 => "name", 1 => "instrument"}
-    page.css("div#band_tab_members_#{type} div table tr.lineupRow td").each_with_index do |item, i|
-      member[member_keys[((i+2)%2)]] = item.content.strip.split.join " "
-      if (i+2)%2 == 0
-        url = item.css('a').first.attr('href') unless item.css('a').empty?
-        splitted_url = url.split('/')
-        member['_id'] = splitted_url[splitted_url.length-1]
-        member['url'] = url
-      elsif (i+2)%2 == 1
-        members.push member
-        member = {}
+
+    page.css("div#band_tab_members_#{type} div table tr.lineupRow").each_with_index do |member_data, i|
+      member_data.css("td").each_with_index do |item, i|
+        member[member_keys[((i+2)%2)]] = item.content.strip.split.join " "
+        if (i+2)%2 == 0
+          url = item.css('a').first.attr('href') unless item.css('a').empty?
+          splitted_url = url.split('/')
+          member['_id'] = splitted_url[splitted_url.length-1]
+          member['url'] = url
+        elsif (i+2)%2 == 1
+          members.push member
+          member = {}
+        end
+      end
+
+      next_tag = member_data.next_element
+
+      if next_tag != nil && next_tag['class'] == "lineupBandsRow"
+        next_tag.css('td').each do |item|
+          also_array = []
+          item.css('a').each do |also|
+            other_band = {}
+            other_band['band_name'] = also.content.strip.split.join " "
+            url = also.attr('href')
+            splitted_url = url.split('/')
+            other_band['_id'] = splitted_url[splitted_url.length-1]
+            also_array.push other_band
+            puts other_band
+          end
+          members[i]['see_also'] = also_array
+        end
       end
     end
+    
     members
   end
 

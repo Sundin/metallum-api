@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 class Album
 
   def self.show_album_page(html)
