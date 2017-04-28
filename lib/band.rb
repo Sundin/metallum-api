@@ -44,13 +44,15 @@ class Band
     splitted_url = url.split('/')
     id = splitted_url[splitted_url.length-1]
 
+    biography = page.css('div.band_comment')[0].text  unless page.css('div.band_comment').empty?
+
     band = {
       band_name: band_name,
       _id: id,
       country: band_values["country"],
       location: band_values["location"],
       status: band_values["status"],
-      active_since: band_values["active_since"],
+      formed_in: band_values["active_since"],
       genre: band_values["genre"],
       themes: band_values["themes"],
       label: band_values["label"],
@@ -58,6 +60,7 @@ class Band
       url: url,
       photo_url: photo_url,
       logo_url: logo_url,
+      biography: biography,
       members: members,
       discography: band_values["discography"],
       links: band_values["links"],
