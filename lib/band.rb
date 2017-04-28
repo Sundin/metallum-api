@@ -79,10 +79,19 @@ class Band
       end
       url = album.css('a').first.attr('href') unless album.css('a').empty?
       splitted_url = url.split('/')
-      disc['url'] = url
-      disc['_id'] = splitted_url[splitted_url.length-1]
-      discography.push disc
+      id = splitted_url[splitted_url.length-1]
+
+      discography.push ({
+        _id: id,
+        url: url,
+        title: disc['name'],
+        type: disc['type'],
+        year: disc['year'],
+        reviews: disc['reviews']
+      })
     end
+
+    puts discography
 
     discography
   end

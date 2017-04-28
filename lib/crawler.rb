@@ -35,7 +35,7 @@ class Crawler
             @band_collection.insert_one(band_data, {})
 
             band_data[:discography].each do |album|
-                album_data = Album.show_album_page(Parse.get_url(album['url']))
+                album_data = Album.show_album_page(Parse.get_url(album[:url]))
                 save_album(album_data)
             end
 
