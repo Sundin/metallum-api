@@ -25,6 +25,8 @@ class Crawler
             }
             t.abort_on_exception = true
         end
+
+        bands
     end
 
     def self.save_band(band_data)

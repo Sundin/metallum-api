@@ -71,7 +71,7 @@ class Band
     res = Nokogiri::HTML Parse.get_url url
     discography = []
     discog_keys = {0 => "name", 1 => "type", 2 => "year", 3 => "reviews"}
-    album_numer = 0
+
     res.css('tbody tr').each do |album|
       disc = {}
       album.css('td').map.with_index do |item, index|        
@@ -82,8 +82,8 @@ class Band
       disc['url'] = url
       disc['_id'] = splitted_url[splitted_url.length-1]
       discography.push disc
-      album_numer = album_numer + 1
     end
+    
     discography
   end
 
