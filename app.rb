@@ -33,7 +33,7 @@ get '/band/:name/:id' do
   band_data = Band.show_band_page(Parse.get_url(url))
   band = Crawler.save_band(band_data)
 
-  band.to_json
+  band_data.to_json
 end
 
 get '/band/:id' do

@@ -83,7 +83,7 @@ class Band
       disc['_id'] = splitted_url[splitted_url.length-1]
       discography.push disc
     end
-    
+
     discography
   end
 
@@ -93,7 +93,12 @@ class Band
     member_keys = {0 => "name", 1 => "instrument"}
     page.css("div#band_tab_members_#{type} div table tr.lineupRow td").each_with_index do |item, i|
       member[member_keys[((i+2)%2)]] = item.content.strip.split.join " "
-      if (i+2)%2 == 1
+      if (i+2)%2 == 0
+        url = item.css('a').first.attr('href') unless item.css('a').empty?
+        splitted_url = url.split('/')
+        member['_id'] = splitted_url[splitted_url.length-1].to_i
+        member['url'] = url
+      elsif (i+2)%2 == 1
         members.push member
         member = {}
       end
@@ -107,7 +112,11 @@ class Band
     band_keys = {0 => "name", 1 => "country", 2 => "genre", 3 => "score"}
     res.css('tbody tr td').each_with_index do |item, i|
       band[band_keys[((i+4)%4)]] = item.content.strip.split.join " "
-      if (i+4)%4 == 3
+      if (i+4)%4 == 0
+        url = item.css('a').first.attr('href') unless item.css('a').empty?
+        splitted_url = url.split('/')
+        band['_id'] = splitted_url[splitted_url.length-1].to_i
+      elsif (i+4)%4 == 3
         bands.push band
         band = {}
       end

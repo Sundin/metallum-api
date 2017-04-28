@@ -42,7 +42,7 @@ class Album
       cover_url: cover_url,
       year: album_values['Release date:'][-4..-1].to_i || nil
     }
-    # TODO: lineup, reviews, song lengths
+    # TODO: lineup, reviews, song lengths, band(s)
 
     album
   end

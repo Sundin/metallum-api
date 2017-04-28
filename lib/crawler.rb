@@ -38,6 +38,11 @@ class Crawler
                 album_data = Album.show_album_page(Parse.get_url(album['url']))
                 save_album(album_data)
             end
+
+            # band_data[:members].each do |member|
+            #     member_data = Member.show_member_page(Parse.get_url(member['url']))
+            #     save_member(member_data)
+            # end
         end
     end
 
