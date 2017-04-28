@@ -4,6 +4,8 @@ require 'json'
 require 'mongo'
 require_relative 'lib/scraper'
 require_relative 'lib/crawler'
+require_relative 'lib/searcher'
+
 
 client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
 db = client.database
@@ -14,7 +16,7 @@ db = client.database
 ########################
 
 
-get '/:letter' do
+get '/crawl/:letter' do
   # a - z, NBR, ~ 
   letter = params['letter']
   bands = Crawler.browse_bands(letter)
@@ -62,9 +64,17 @@ get '/album/:id' do
   album.to_json
 end
 
-get '/search/band_name/:name' do
-  name = params['name']
-  Scraper.searchBand(name)
+get '/search/band_name/:band_name' do
+  band_name = params['band_name']
+  
+  search_results = Searcher.search_bands(band_name)
+
+  result = {
+    search_results: search_results,
+    query: band_name
+  }
+
+  result.to_json
 end
 
 get '/search/album_name/:title' do
