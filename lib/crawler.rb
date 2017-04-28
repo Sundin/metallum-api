@@ -12,13 +12,18 @@ class Crawler
 
     def self.browse_bands(letter)
         bands = browse_helper(letter, 0)
-        bands.each do |band|
+
+        number_of_threads = 4
+        chunk_size = bands.count / number_of_threads 
+
+        bands.each_slice(chunk_size) do |chunk|
             t = Thread.new {
-                band_data = Band.show_band_page(Parse.get_url(band['url']))
-                save_band(band_data)
-                sleep 500
+                chunk.each do |band|
+                    band_data = Band.show_band_page(Parse.get_url(band['url']))
+                    save_band(band_data)
+                end
             }
-            t.abort_on_exception = false
+            t.abort_on_exception = true
         end
     end
 
