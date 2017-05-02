@@ -31,6 +31,8 @@ class Album
 
     cover_url = page.css("a.image#cover")[0]['href'] unless page.css("a.image#cover").empty?
 
+    lineup = get_lineup(page)
+
     album = {
       _id: id,
       title: title,
@@ -42,11 +44,18 @@ class Album
       limitation: album_values['Limitation:'],
       songs: songs,
       cover_url: cover_url,
-      year: album_values['Release date:'][-4..-1].to_i || nil
+      year: album_values['Release date:'][-4..-1].to_i || nil,
+      lineup: lineup
     }
     # TODO: lineup, reviews, song lengths, band(s)
 
     album
+  end
+
+  def self.get_lineup(page)
+    page.css('div#album_members tr.lineupRow').each do |member|
+      puts member.css('a').text
+    end
   end
 
   def self.show_album_reviews(res)

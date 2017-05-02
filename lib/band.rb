@@ -21,7 +21,6 @@ class Band
     members['current'] = show_band_members page, "current"
     members['past'] = show_band_members page, "past"
     members['live'] = show_band_members page, "live"
-    band_values['members'] = members
 
     page.css("div#band_tab_discography").map do |prev_elem|
       prev_elem.previous_element.css('li:eq(4) a').map do |link|
@@ -94,8 +93,6 @@ class Band
       })
     end
 
-    puts discography
-
     discography
   end
 
@@ -130,7 +127,6 @@ class Band
             splitted_url = url.split('/')
             other_band['_id'] = splitted_url[splitted_url.length-1]
             also_array.push other_band
-            puts other_band
           end
           members[i]['see_also'] = also_array
         end

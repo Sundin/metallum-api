@@ -6,7 +6,7 @@ class Member
     page = Nokogiri::HTML(html)
 
     member = {
-        
+        # TODO
     }
 
     member
