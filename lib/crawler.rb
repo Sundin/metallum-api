@@ -14,8 +14,8 @@ class Crawler
     def self.browse_bands(letter)
         bands = browse_helper(letter, 0)
 
-        number_of_threads = 4
-        chunk_size = bands.count / number_of_threads 
+        number_of_threads = 8
+        chunk_size = (bands.count / number_of_threads) + 1
 
         bands.each_slice(chunk_size) do |chunk|
             t = Thread.new {
@@ -40,6 +40,7 @@ class Crawler
                 save_album(album_data)
             end
 
+            # TODO:
             # band_data[:members].each do |member|
             #     member_data = Member.show_member_page(Parse.get_url(member['url']))
             #     save_member(member_data)
