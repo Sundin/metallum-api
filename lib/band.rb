@@ -126,6 +126,12 @@ class Band
             url = also.attr('href')
             splitted_url = url.split('/')
             other_band['_id'] = splitted_url[splitted_url.length-1]
+
+            if also.xpath('preceding-sibling::text()[1]').to_s.include? 'ex-'
+              other_band['still_member'] = false
+            else 
+              other_band['still_member'] = true
+            end
             also_array.push other_band
           end
           members[i]['see_also'] = also_array
