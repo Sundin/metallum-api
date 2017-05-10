@@ -17,7 +17,23 @@ class Album
 
     album_values = {}
     page.css('div#album_info').search('dt').each do |node|
-      album_values[node.text] = node.next_element.text
+      if node.text == 'Label:'
+        label_url = node.next_element.css('a')[0]['href'] unless node.next_element.css('a').empty?
+        puts node.next_element
+        if label_url != nil 
+          splitted_url = label_url.split('/') 
+          split_again = splitted_url[splitted_url.length-1].split('#')  
+          label_id = split_again[0]
+        end
+        
+        label = {
+          _id: label_id,
+          name: node.next_element.text
+        }
+        album_values['Label:'] = label
+      else      
+        album_values[node.text] = node.next_element.text
+      end
     end
 
     songs = []
