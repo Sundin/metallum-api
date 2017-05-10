@@ -23,8 +23,10 @@ class Album
     songs = []
     page.css('table.table_lyrics').search('td.wrapWords').each do |element|
       title = element.text.strip || element.text
+      length = element.next_element.content
       song = {
-        title: title.tr("\n", "").tr("\t", "")
+        title: title.tr("\n", "").tr("\t", ""),
+        length: length
       }
       songs.push song
     end
@@ -45,17 +47,29 @@ class Album
       songs: songs,
       cover_url: cover_url,
       year: album_values['Release date:'][-4..-1].to_i || nil,
-      lineup: lineup
+      lineup: lineup.to_a
     }
-    # TODO: lineup, reviews, song lengths, band(s)
+    # TODO: reviews, band(s)
 
     album
   end
 
   def self.get_lineup(page)
-    page.css('div#album_members tr.lineupRow').each do |member|
-      puts member.css('a').text
+    members = []
+    page.css('div#album_members tr.lineupRow').each do |memberRow|
+      url = memberRow.css('a')[0]['href']
+      splitted_url = url.split('/')
+      id = splitted_url[splitted_url.length-1]
+
+      member = {
+        _id: id,
+        name: memberRow.css('a').text,
+        instrument: memberRow.css('td')[1].text.tr("\n", "").tr("\t", "")
+      }
+      
+      members.push member
     end
+    members.to_set # Ugly work around to get rid of duplicates
   end
 
   def self.show_album_reviews(res)
