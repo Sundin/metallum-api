@@ -35,9 +35,22 @@ class Album
 
     lineup = get_lineup(page)
 
+    bands = []
+    page.css('h2.band_name a').each do |element|
+      url = element['href']
+      splitted_url = url.split('/')
+      band_id = splitted_url[splitted_url.length-1]
+      band = {
+        _id: band_id,
+        name: element.text
+      }
+      bands.push band
+    end
+
     album = {
       _id: id,
       title: title,
+      bands: bands,
       type: album_values['Type:'],
       release_date: album_values['Release date:'],
       catalog_id: album_values['Catalog ID:'],
@@ -49,7 +62,7 @@ class Album
       year: album_values['Release date:'][-4..-1].to_i || nil,
       lineup: lineup.to_a
     }
-    # TODO: reviews, band(s)
+    # TODO: reviews
 
     album
   end
