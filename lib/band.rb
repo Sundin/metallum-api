@@ -11,7 +11,22 @@ class Band
     members = {}
 
     page.css('div#band_stats dd').each_with_index do |item, index|
-      band_values[band_keys[index]] = item.content.strip.split.join " "
+      if index == 6
+        label_url = item.css('a')[0]['href'] unless item.css('a').empty?
+        if label_url != nil 
+          splitted_url = label_url.split('/') 
+          split_again = splitted_url[splitted_url.length-1].split('#')  
+          label_id = split_again[0]
+        end
+        
+        label = {
+          _id: label_id,
+          name: item.text
+        }
+        band_values['label'] = label
+      else   
+        band_values[band_keys[index]] = item.content.strip.split.join " "
+      end
     end
 
     page.css("div#band_disco ul li:eq(1) a").map { |link|

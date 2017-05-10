@@ -19,7 +19,6 @@ class Album
     page.css('div#album_info').search('dt').each do |node|
       if node.text == 'Label:'
         label_url = node.next_element.css('a')[0]['href'] unless node.next_element.css('a').empty?
-        puts node.next_element
         if label_url != nil 
           splitted_url = label_url.split('/') 
           split_again = splitted_url[splitted_url.length-1].split('#')  
