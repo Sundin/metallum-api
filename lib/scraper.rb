@@ -7,12 +7,12 @@ require_relative 'url'
 
 class Scraper 
     def self.getBand(name, id)
-        url = "http://www.metal-archives.com/bands/" + name + "/" + id
+        url = "https://www.metal-archives.com/bands/" + name + "/" + id
         Band.show_band_page(Parse.get_url(url))
     end
 
     def self.getAlbum(band, title, id)
-        url = "http://www.metal-archives.com/albums/" + band + "/" + name + "/" + id
+        url = "https://www.metal-archives.com/albums/" + band + "/" + name + "/" + id
         Album.show_album_page(Parse.get_url(url))
     end
 

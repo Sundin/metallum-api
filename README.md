@@ -4,7 +4,7 @@
 
 mongod --dbpath data (make sure the data directory exists)
 
-ruby app.rb -o 0.0.0.0.
+ruby app.rb -o 0.0.0.0
 
 
 ## Endpoints

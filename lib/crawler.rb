@@ -65,7 +65,7 @@ class Crawler
     def self.browse_helper(letter, display_start)
         display_length = 500
 
-        url = "http://www.metal-archives.com/browse/ajax-letter/l/" +
+        url = "https://www.metal-archives.com/browse/ajax-letter/l/" +
         letter +
         "/json/1?sEcho=9&iColumns=4&sColumns=&" + 
         "iDisplayStart=" + display_start.to_s + 

@@ -1,5 +1,5 @@
 class Url
-  MAIN_SITE = "http://www.metal-archives.com"
+  MAIN_SITE = "https://www.metal-archives.com"
   
   def self.CREATED 
     "#{MAIN_SITE}/archives/ajax-band-list/selection/#{Time.now.year}-#{Time.now.month.to_s.rjust(2,'0')}/by/created/json/1?sEcho=1&iColumns=6&sColumns=&iDisplayStart=0&iDisplayLength=200&mDataProp_0=0&mDataProp_1=1&mDataProp_2=2&mDataProp_3=3&mDataProp_4=4&mDataProp_5=5&iSortCol_0=4&sSortDir_0=desc&iSortingCols=1&bSortable_0=true&bSortable_1=true&bSortable_2=true&bSortable_3=true&bSortable_4=true&bSortable_5=true"

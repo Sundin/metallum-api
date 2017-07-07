@@ -1,17 +1,11 @@
 require 'net/http'
 require 'json'
+require "open-uri"
 
 class Parse
   
   def self.get_url(path)
-    uri = URI(path)
-    req = Net::HTTP::Get.new(uri)
-
-    res = Net::HTTP.start(uri.hostname, uri.port) {|http|
-      http.request(req)
-    }
-
-    res.body
+    URI.parse(path).read
   end
 
   def self.get_json(path)
