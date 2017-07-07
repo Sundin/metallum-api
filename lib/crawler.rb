@@ -20,7 +20,7 @@ class Crawler
         bands.each_slice(chunk_size) do |chunk|
             t = Thread.new {
                 chunk.each do |band|
-                    band_data = Band.show_band_page(Parse.get_url(band['url']))
+                    band_data = Band.show_band_page(Parse.get_body(band['url']))
                     save_band(band_data)
                 end
             }
@@ -36,13 +36,13 @@ class Crawler
             @band_collection.insert_one(band_data, {})
 
             band_data[:discography].each do |album|
-                album_data = Album.show_album_page(Parse.get_url(album[:url]))
+                album_data = Album.show_album_page(Parse.get_body(album[:url]))
                 save_album(album_data)
             end
 
             # TODO:
             # band_data[:members].each do |member|
-            #     member_data = Member.show_member_page(Parse.get_url(member['url']))
+            #     member_data = Member.show_member_page(Parse.get_body(member['url']))
             #     save_member(member_data)
             # end
         end
@@ -119,7 +119,7 @@ class Crawler
         db = client.database
         collection = client[:albums]
         
-        album_data = Album.show_album_page(Parse.get_url(url))
+        album_data = Album.show_album_page(Parse.get_body(url))
 
         unless album_data[:_id].nil? 
             collection.delete_one( { _id: album_data[:_id] } )

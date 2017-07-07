@@ -85,7 +85,7 @@ class Band
   end
 
   def self.show_band_discography(url)
-    res = Nokogiri::HTML Parse.get_url url
+    res = Nokogiri::HTML Parse.get_body url
     discography = []
     discog_keys = {0 => "name", 1 => "type", 2 => "year", 3 => "reviews"}
 
@@ -158,7 +158,7 @@ class Band
   end
 
   def self.show_similar_bands(url)
-    res = Nokogiri::HTML Parse.get_url url
+    res = Nokogiri::HTML Parse.get_body url
     bands, band = [], {}
     band_keys = {0 => "name", 1 => "country", 2 => "genre", 3 => "score"}
     res.css('tbody tr td').each_with_index do |item, i|
@@ -176,7 +176,7 @@ class Band
   end
 
   def self.show_band_links(url)
-    res = Nokogiri::HTML Parse.get_url url
+    res = Nokogiri::HTML Parse.get_body url
     links, link = [], {}
     res.css("table tr td a").each_with_index do |item, i|
       link[item['title'].gsub("Go to: ", "").tr("§", "").tr(".", " ")] = item['href']

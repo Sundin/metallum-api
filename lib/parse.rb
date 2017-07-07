@@ -1,21 +1,14 @@
-require 'net/http'
+require 'open-uri'
 require 'json'
-require "open-uri"
 
 class Parse
   
-  def self.get_url(path)
-    URI.parse(path).read
+  def self.get_body(url)
+    URI.parse(url).read
   end
 
-  def self.get_json(path)
-    # puts "#{SITE_URL}/#{path}"
-    json_results path
-  end
-
-  def self.json_results(url)
-    response = Net::HTTP.get_response(URI.parse(url))
-    data = response.body
+  def self.get_json(url)
+    data = URI.parse(url).read
     JSON.parse(data)
   end
   

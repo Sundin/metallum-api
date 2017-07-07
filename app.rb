@@ -30,7 +30,7 @@ get '/band/:name/:id' do
   # band = Scraper.getBand(name, id)
 
   url = "https://www.metal-archives.com/bands/" + name + "/" + id
-  band_data = Band.show_band_page(Parse.get_url(url))
+  band_data = Band.show_band_page(Parse.get_body(url))
   band = Crawler.save_band(band_data)
 
   band_data.to_json
