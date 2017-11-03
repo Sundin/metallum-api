@@ -24,16 +24,12 @@ get '/crawl/:letter' do
   bands.to_json
 end
 
-get '/band/:name/:id' do
+get '/crawl/band/:name/:id' do
   name = params['name']
   id = params['id']
-  # band = Scraper.getBand(name, id)
 
   url = "https://www.metal-archives.com/bands/" + name + "/" + id
-  band_data = Band.show_band_page(Parse.get_body(url))
-  band = Crawler.save_band(band_data)
-
-  band_data.to_json
+  Crawler.crawl_band(url)
 end
 
 get '/band/:id' do

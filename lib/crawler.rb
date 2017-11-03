@@ -20,14 +20,21 @@ class Crawler
         bands.each_slice(chunk_size) do |chunk|
             t = Thread.new {
                 chunk.each do |band|
-                    band_data = Band.show_band_page(Parse.get_body(band['url']))
-                    save_band(band_data)
+                    crawl_band(band['url'])
                 end
             }
             t.abort_on_exception = true
         end
 
         bands
+    end
+
+    def self.crawl_band(url) 
+        puts "Crawling " + url
+        band_data = Band.show_band_page(Parse.get_body(url))
+        save_band(band_data)
+      
+        band_data.to_json
     end
 
     def self.save_band(band_data)
