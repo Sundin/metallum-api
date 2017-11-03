@@ -13,7 +13,7 @@ class Album
     splitted_url = url.split('/')
     id = splitted_url[splitted_url.length-1]
 
-    title = page.css("h1[class=album_name] a")[0].text
+    album_title = page.css("h1[class=album_name] a")[0].text
 
     album_values = {}
     page.css('div#album_info').search('dt').each do |node|
@@ -64,7 +64,7 @@ class Album
 
     album = {
       _id: id,
-      title: title,
+      title: album_title,
       bands: bands,
       type: album_values['Type:'],
       release_date: album_values['Release date:'],
