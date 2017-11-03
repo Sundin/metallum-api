@@ -1,6 +1,5 @@
 require 'json'
 require 'mongo'
-require_relative 'scraper'
 require_relative 'band'
 require_relative 'album'
 
@@ -41,8 +40,8 @@ class Crawler
                 chunk.each do |band|
                     puts band
                     unless band[:_id].nil?
-                        # @band_collection.delete_one( { _id: band[:_id] } )
-                        @band_collection.insert_one(band, {})
+                         @band_collection.delete_one( { _id: band[:_id] } )
+                        #@band_collection.insert_one(band, {})
                     end
                 end
             }
@@ -55,19 +54,18 @@ class Crawler
     def self.crawl_band(url) 
         puts "Crawling " + url
         band_data = Band.show_band_page(Parse.get_body(url))
-        save_band(band_data)
-      
+        save_band(band_data)      
         band_data.to_json
     end
 
+    # TODO: make asynch
     def self.save_band(band_data)
         unless band_data[:_id].nil? 
             @band_collection.delete_one( { _id: band_data[:_id] } )
             @band_collection.insert_one(band_data, {})
 
             band_data[:discography].each do |album|
-                album_data = Album.show_album_page(Parse.get_body(album[:url]))
-                save_album(album_data)
+                crawl_album(album[:url])
             end
 
             # TODO:
@@ -78,6 +76,14 @@ class Crawler
         end
     end
 
+    def self.crawl_album(url)
+        puts "Crawling " + url
+        album_data = Album.show_album_page(Parse.get_body(url))
+        save_album(album_data)
+        album_data.to_json
+    end
+
+    # TODO: make asynch
     def self.save_album(album_data) 
         unless album_data[:_id].nil? 
             @album_collection.delete_one( { _id: album_data[:_id] } )
@@ -85,6 +91,7 @@ class Crawler
         end
     end
 
+    # TODO: make asynch
     def self.save_member(member_data) 
         unless member_data[:_id].nil? 
             @member_collection.delete_one( { _id: member_data[:_id] } )
@@ -143,19 +150,6 @@ class Crawler
         end
 
         result_array
-    end
-
-    def self.add_album(url) 
-        client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
-        db = client.database
-        collection = client[:albums]
-        
-        album_data = Album.show_album_page(Parse.get_body(url))
-
-        unless album_data[:_id].nil? 
-            collection.delete_one( { _id: album_data[:_id] } )
-            collection.insert_one(album_data, {})
-        end        
     end
 end
 

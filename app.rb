@@ -2,19 +2,14 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
 require 'mongo'
-require_relative 'lib/scraper'
 require_relative 'lib/crawler'
 require_relative 'lib/searcher'
-
 
 client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
 db = client.database
 
 
-##### On startup: ######
-# bands = Crawler.browse_bands('r')
-########################
-
+### CRAWLING ###
 
 get '/crawl/:letter' do
   # a - z, NBR, ~ 
@@ -39,6 +34,24 @@ get '/crawl/band/:name/:id' do
   Crawler.crawl_band(url)
 end
 
+
+### BANDS ###
+
+get '/band/:name/:id' do
+  id = params['id']
+  collection = client[:bands]
+  band = collection.find( { _id: id} ).first
+
+  if band.nil?
+    puts "Not found in database, fetching from Metal Archives instead"
+    name = params['name']
+    url = "https://www.metal-archives.com/bands/" + name + "/" + id
+    Crawler.crawl_band(url)
+  else
+    band.to_json
+  end
+end
+
 get '/band/:id' do
   id = params['id']
   collection = client[:bands]
@@ -47,16 +60,22 @@ get '/band/:id' do
   band.to_json
 end
 
+
+### ALBUMS ###
+
 get '/album/:band/:title/:id' do
-  band = params['band']
-  title = params['title']
   id = params['id']
-  album = Scraper.getAlbum(band, title, id)
-
   collection = client[:albums]
-  collection.update_one(album, {})
+  album = collection.find( { _id: id} ).first
 
-  album.to_json
+  if album.nil?
+    band = params['band']
+    title = params['title']
+    url = "https://www.metal-archives.com/albums/" + band + "/" + title + "/" + id
+    Crawler.crawl_album(url)
+  else
+    album.to_json
+  end
 end
 
 get '/album/:id' do
@@ -66,6 +85,9 @@ get '/album/:id' do
 
   album.to_json
 end
+
+
+#### SEARCH ###
 
 get '/search/band_name/:band_name' do
   band_name = params['band_name']
