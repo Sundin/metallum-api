@@ -24,6 +24,13 @@ get '/crawl/:letter' do
   bands.to_json
 end
 
+get '/quick_crawl/:letter' do
+  letter = params['letter']
+  bands = Crawler.quick_crawl(letter)
+  puts bands.count
+  bands.to_json
+end
+
 get '/crawl/band/:name/:id' do
   name = params['name']
   id = params['id']

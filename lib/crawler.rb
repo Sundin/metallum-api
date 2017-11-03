@@ -29,6 +29,29 @@ class Crawler
         bands
     end
 
+    # Only save the info available from the search results (name, id, url, genre, country, status)
+    def self.quick_crawl(letter)
+        bands = browse_helper(letter, 0)
+
+        number_of_threads = 8
+        chunk_size = (bands.count / number_of_threads) + 1
+
+        bands.each_slice(chunk_size) do |chunk|
+            t = Thread.new {
+                chunk.each do |band|
+                    puts band
+                    unless band[:_id].nil?
+                        # @band_collection.delete_one( { _id: band[:_id] } )
+                        @band_collection.insert_one(band, {})
+                    end
+                end
+            }
+            t.abort_on_exception = true
+        end
+
+        bands
+    end
+
     def self.crawl_band(url) 
         puts "Crawling " + url
         band_data = Band.show_band_page(Parse.get_body(url))
@@ -104,17 +127,18 @@ class Crawler
         result_array = []
 
         bands.each do |result|
-            band = {}
-
             url = Nokogiri::HTML(result[0]).css('a')
-            band["name"] = url.text
+            band_url = url[0]['href']
+            splitted_url = band_url.split('/')
 
-            band["url"] = url[0]['href']
-            splitted_url = band["url"].split('/')
-            band["_id"] = splitted_url[splitted_url.length-1]
-
-            # band["country"] = result[1]
-            # band["genre"] = result[2]
+            band = {
+                band_name: url.text,
+                url: band_url,
+                _id: splitted_url[splitted_url.length-1],
+                country: result[1],
+                genre: result[2],
+                status: Nokogiri::HTML(result[3]).css('span').text
+            }
             result_array.push(band)
         end
 
