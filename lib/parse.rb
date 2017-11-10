@@ -4,7 +4,8 @@ require 'json'
 class Parse
   
   def self.get_body(url)
-    URI.parse(url).read
+    uri = URI.escape(url)
+    URI.parse(uri).read
   end
 
   def self.get_json(url)
