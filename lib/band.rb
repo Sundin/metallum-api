@@ -74,7 +74,7 @@ class Band
       url: url,
       photo_url: photo_url,
       logo_url: logo_url,
-      biography: biography,
+      biography: biography.strip,
       members: members,
       discography: band_values["discography"],
       links: band_values["links"],
