@@ -7,6 +7,6 @@
 
 ## Endpoints
 
-- /band/{id}
-- /album/{id}
-
+- /bands/{name}/{id}
+- /albums/{band}/{title}/{id}
+- /browse_bands/{letter}

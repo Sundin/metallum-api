@@ -5,7 +5,7 @@ require_relative 'lib/crawler'
 
 ### CRAWLING ###
 
-# Letters: A-Z, #, ~
+# Letters: A-Z, NBR, ~
 get '/browse_bands/:letter' do
   letter = params['letter']
   bands = Crawler.browse_bands(letter)
