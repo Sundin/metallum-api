@@ -1,31 +1,18 @@
 require 'json'
-require 'mongo'
 require_relative 'band'
 require_relative 'album'
 
-class Crawler 
-    @client = Mongo::Client.new([ '127.0.0.1:27017' ], :database => 'test')
-    @db = @client.database
-    @band_collection = @client[:bands]
-    @album_collection = @client[:albums]
-    @member_collection = @client[:members]
+class Crawler     
+    def self.crawl_band(url) 
+        puts "Crawling " + url
+        band_data = Band.show_band_page(Parse.get_body(url))    
+        band_data.to_json
+    end
 
-    def self.browse_bands(letter)
-        bands = browse_helper(letter, 0)
-
-        number_of_threads = 8
-        chunk_size = (bands.count / number_of_threads) + 1
-
-        bands.each_slice(chunk_size) do |chunk|
-            t = Thread.new {
-                chunk.each do |band|
-                    crawl_band(band['url'])
-                end
-            }
-            t.abort_on_exception = true
-        end
-
-        bands
+    def self.crawl_album(url)
+        puts "Crawling " + url
+        album_data = Album.show_album_page(Parse.get_body(url))
+        album_data.to_json
     end
 
     # Only save the info available from the search results (name, id, url, genre, country, status)
@@ -39,28 +26,12 @@ class Crawler
             t = Thread.new {
                 chunk.each do |band|
                     puts band
-                    unless band[:_id].nil?
-                        # @band_collection.delete_one( { _id: band[:_id] } )
-                        @band_collection.insert_one(band, {})
-                    end
                 end
             }
             t.abort_on_exception = true
         end
 
         bands
-    end
-
-    def self.crawl_band(url) 
-        puts "Crawling " + url
-        band_data = Band.show_band_page(Parse.get_body(url))    
-        band_data.to_json
-    end
-
-    def self.crawl_album(url)
-        puts "Crawling " + url
-        album_data = Album.show_album_page(Parse.get_body(url))
-        album_data.to_json
     end
     
     def self.browse_helper(letter, display_start)
