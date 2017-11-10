@@ -16,7 +16,7 @@ class Crawler
     end
 
     # Only save the info available from the search results (name, id, url, genre, country, status)
-    def self.quick_crawl(letter)
+    def self.browse_bands(letter)
         bands = browse_helper(letter, 0)
 
         number_of_threads = 8

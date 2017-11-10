@@ -5,9 +5,10 @@ require_relative 'lib/crawler'
 
 ### CRAWLING ###
 
-get '/quick_crawl/:letter' do
+# Letters: A-Z, #, ~
+get '/browse_bands/:letter' do
   letter = params['letter']
-  bands = Crawler.quick_crawl(letter)
+  bands = Crawler.browse_bands(letter)
   bands.to_json
 end
 
