@@ -40,8 +40,8 @@ class Crawler
                 chunk.each do |band|
                     puts band
                     unless band[:_id].nil?
-                         @band_collection.delete_one( { _id: band[:_id] } )
-                        #@band_collection.insert_one(band, {})
+                        # @band_collection.delete_one( { _id: band[:_id] } )
+                        @band_collection.insert_one(band, {})
                     end
                 end
             }
@@ -53,50 +53,14 @@ class Crawler
 
     def self.crawl_band(url) 
         puts "Crawling " + url
-        band_data = Band.show_band_page(Parse.get_body(url))
-        save_band(band_data)      
+        band_data = Band.show_band_page(Parse.get_body(url))    
         band_data.to_json
-    end
-
-    # TODO: make asynch
-    def self.save_band(band_data)
-        unless band_data[:_id].nil? 
-            @band_collection.delete_one( { _id: band_data[:_id] } )
-            @band_collection.insert_one(band_data, {})
-
-            band_data[:discography].each do |album|
-                crawl_album(album[:url])
-            end
-
-            # TODO:
-            # band_data[:members].each do |member|
-            #     member_data = Member.show_member_page(Parse.get_body(member['url']))
-            #     save_member(member_data)
-            # end
-        end
     end
 
     def self.crawl_album(url)
         puts "Crawling " + url
         album_data = Album.show_album_page(Parse.get_body(url))
-        save_album(album_data)
         album_data.to_json
-    end
-
-    # TODO: make asynch
-    def self.save_album(album_data) 
-        unless album_data[:_id].nil? 
-            @album_collection.delete_one( { _id: album_data[:_id] } )
-            @album_collection.insert_one(album_data, {})
-        end
-    end
-
-    # TODO: make asynch
-    def self.save_member(member_data) 
-        unless member_data[:_id].nil? 
-            @member_collection.delete_one( { _id: member_data[:_id] } )
-            @member_collection.insert_one(member_data, {})
-        end
     end
     
     def self.browse_helper(letter, display_start)

@@ -37,53 +37,23 @@ end
 
 ### BANDS ###
 
-get '/band/:name/:id' do
+get '/bands/:name/:id' do
+  name = params['name']
   id = params['id']
-  collection = client[:bands]
-  band = collection.find( { _id: id} ).first
-
-  if band.nil?
-    puts "Not found in database, fetching from Metal Archives instead"
-    name = params['name']
-    url = "https://www.metal-archives.com/bands/" + name + "/" + id
-    Crawler.crawl_band(url)
-  else
-    band.to_json
-  end
-end
-
-get '/band/:id' do
-  id = params['id']
-  collection = client[:bands]
-  band = collection.find( { _id: id} ).first
-
-  band.to_json
+  url = "https://www.metal-archives.com/bands/" + name + "/" + id
+  Crawler.crawl_band(url)
 end
 
 
 ### ALBUMS ###
 
-get '/album/:band/:title/:id' do
+get '/albums/:band/:title/:id' do
+  band = params['band']
+  title = params['title']
   id = params['id']
-  collection = client[:albums]
-  album = collection.find( { _id: id} ).first
-
-  if album.nil?
-    band = params['band']
-    title = params['title']
-    url = "https://www.metal-archives.com/albums/" + band + "/" + title + "/" + id
-    Crawler.crawl_album(url)
-  else
-    album.to_json
-  end
-end
-
-get '/album/:id' do
-  id = params['id']
-  collection = client[:albums]
-  album = collection.find( { _id: id} ).first
-
-  album.to_json
+  url = "https://www.metal-archives.com/albums/" + band + "/" + title + "/" + id
+  url = url.tr(" ", "_")
+  Crawler.crawl_album(url)
 end
 
 
