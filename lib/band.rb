@@ -21,7 +21,8 @@ class Band
         
         label = {
           _id: label_id,
-          name: item.text
+          name: item.text,
+          url: label_url
         }
         band_values['label'] = label
       else   
